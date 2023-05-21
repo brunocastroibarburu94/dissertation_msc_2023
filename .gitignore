@@ -1,0 +1,6 @@
+.pytest_cache/
+site/
+**__pycache__**
+.venv/
+**.ipynb_checkpoints**
+local/
