@@ -1,1 +1,4 @@
 jupyterlab
+yfinance # Yahoo Finance
+matplotlib # Plotting
+seaborn # More Plotting

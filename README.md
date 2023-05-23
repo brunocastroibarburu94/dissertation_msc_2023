@@ -1,26 +1,22 @@
-#  Jupyter Notebook with Julia
+#  Algorithic Trading using Optimal Control in the Julia Language
+
+Welcome to the repository containing the implementation of the final year project by Bruno Castro for the MSc. in Optimization and Control at Imperial College London.
+
+In this repository you will find Jupyter Notebooks with examples and figures used in the final year project. This is separate from any particular package developed or enhanced by the student during his work in the project.
+
+Instructions will be available below 
+
 
 ### How to Run Locally ###
-1. run lcBuid.sh to build the image 
-1. Option A: 2 steps
-    2. run lcRun.sh to run the container with that image and enter in an interactive console
-    2. run "make jupyterlab" within the console to start the jupyter server
-1. Option B: 1 step
-    2. run lcDeploy.sh to run the container with that image and start spin up the jupyter server simultaneously
-
+1. Open a bash terminal and run 
 ```bash
-# Build local container
-. lcBuid.sh
-
-# A.1 Run local container
-. lcRun.sh
-# A.2 Deploy Jupyterlab server
-make jupyterlab
-
-# B.1 Run container and deploy jupyterlab server
-. lcDeploy.sh
+. local_container.sh
 ```
-
+2. Instantiate a jupyter lab server with
+```bash
+make jupyterlab
+```
+<!-- 
 ### Package Management ###
 When developing using Docker, all the packages from the Manifest.toml will be installed during the build process.
 
@@ -39,4 +35,5 @@ If you wish to add a package and that package to be added to the image next time
 using Pkg
 Pkg.activate("./julia")
 Pkg.add("HTTP")
-```
+``` 
+-->
