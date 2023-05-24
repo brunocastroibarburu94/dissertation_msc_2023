@@ -3,8 +3,11 @@ FROM python:3.9-bullseye
 
 # ========== Install Julia ==========
 WORKDIR /
+# For installation of Julia
 ENV JULIA_VER=1.8.5
 ENV JULIA_URL=https://julialang-s3.julialang.org/bin/linux/x64/1.8
+# For correct routing of PyCall
+ENV PYTHON=/root/.julia/conda/3/x86_64
 
 # Download Julia binary
 RUN curl -LO ${JULIA_URL}/julia-${JULIA_VER}-linux-x86_64.tar.gz && \

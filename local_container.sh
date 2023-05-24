@@ -4,17 +4,16 @@ PROJECT_NAME=msc-2023
 # Windows OS
 
 # Build Image
-docker build  -t ${PROJECT_NAME}-image  . 
+# docker build  -t ${PROJECT_NAME}-image  . 
 
 # Remove container with same name
-docker rm ${PROJECT_NAME}-container 
+# docker rm ${PROJECT_NAME}-container 
 
 # Start container
 winpty docker run --rm -it \
 --mount type=bind,source="$(PWD)",target=/root/project \
 --name ${PROJECT_NAME}-container \
 -p 8080:8080 \
--p 8031:8031 \
 --entrypoint bash \
 ${PROJECT_NAME}-image 
 

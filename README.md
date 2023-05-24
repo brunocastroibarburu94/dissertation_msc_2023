@@ -16,6 +16,14 @@ Instructions will be available below
 ```bash
 make jupyterlab
 ```
+### Adding a custom package hosted in GitHub
+Some of the packages used may not be register in the Julia registry. In principle all packages needed for the notebooks in this repository should be added automatically when building the docker image. However if any of the packages seem not to be installed this can be solved by opening a console and adding them manually using the code below as a guideline.
+```julia
+# From a julia console type ] to enter into REPL mode
+add "https://github.com/brunocastroibarburu94/AlgoSource.jl.git#master"
+# Done now you can use that package.
+```
+
 <!-- 
 ### Package Management ###
 When developing using Docker, all the packages from the Manifest.toml will be installed during the build process.

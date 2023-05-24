@@ -2,7 +2,14 @@
 
 julia_version = "1.8.5"
 manifest_format = "2.0"
-project_hash = "18367dd2a66af60eccee725f953b412d191004d9"
+project_hash = "e9b0cdc4bc62fd22dad7cc603935f07d40c6513f"
+
+[[deps.AlgoSource]]
+git-tree-sha1 = "30067ff0f290da5372ca3cd21ecedcbbd290187a"
+repo-rev = "main"
+repo-url = "https://github.com/brunocastroibarburu94/AlgoSource.jl.git#master"
+uuid = "94819ca1-02e2-4d0c-af20-c929ea0f6589"
+version = "1.0.0-DEV"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
