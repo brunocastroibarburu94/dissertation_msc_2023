@@ -1,6 +1,6 @@
 pip-compile:
-	pip-compile --resolver=backtracking --verbose --output-file=requirements.txt requirements.in
-	pip-sync requirements.txt
+	pip-compile --resolver=backtracking --verbose --output-file=./python/requirements.txt ./python/requirements.in
+	pip-sync ./python/requirements.txt
 
 dev-compile:
 	pip-compile --resolver=backtracking --verbose --output-file=requirements_dev.txt requirements_dev.in

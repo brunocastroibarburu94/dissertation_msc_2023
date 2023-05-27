@@ -24,6 +24,17 @@ RUN apt-get -y update  && apt-get -y upgrade
 # Pip-tools dependencies
 RUN apt-get -y install build-essential libssl-dev libffi-dev python-dev curl
 
+# Install dependencies for zipline-reloaded, it uses Cython and TA-Lib
+RUN apt install -y libatlas-base-dev python-dev gfortran pkg-config libfreetype6-dev hdf5-tools
+WORKDIR /temp
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+RUN tar -xzf ta-lib-0.4.0-src.tar.gz
+WORKDIR /temp/ta-lib/
+RUN  ./configure
+RUN make
+RUN make install
+
+
 RUN pip install pip-tools
 
 # Python Packages

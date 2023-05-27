@@ -11,6 +11,7 @@ PROJECT_NAME=msc-2023
 
 # Start container
 winpty docker run --rm -it \
+--env-file .env \
 --mount type=bind,source="$(PWD)",target=/root/project \
 --name ${PROJECT_NAME}-container \
 -p 8080:8080 \

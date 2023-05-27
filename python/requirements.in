@@ -2,3 +2,6 @@ jupyterlab
 yfinance # Yahoo Finance
 matplotlib # Plotting
 seaborn # More Plotting
+bokeh # Nice plotting
+zipline-reloaded # Event Driven Backtesting
+julia # PyJulia, allows execution of julia code in Python.
