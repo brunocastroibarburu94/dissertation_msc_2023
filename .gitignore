@@ -5,3 +5,4 @@ site/
 **.ipynb_checkpoints**
 .env
 .temp/*
+.zipline/
