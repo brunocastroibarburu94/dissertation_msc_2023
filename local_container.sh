@@ -4,20 +4,28 @@ PROJECT_NAME=msc-2023
 # Windows OS
 
 # Build Image
-# docker build  -t ${PROJECT_NAME}-image  . 
+# docker build -t ${PROJECT_NAME}-image  .
 
 # Remove container with same name
 # docker rm ${PROJECT_NAME}-container 
 
 # Start container
-winpty docker run --rm -it \
---env-file .env \
---mount type=bind,source="$(PWD)",target=/root/project \
---name ${PROJECT_NAME}-container \
--p 8080:8080 \
---entrypoint bash \
-${PROJECT_NAME}-image 
+# winpty docker run --rm -it \#For Windows
+# --env-file .env \
+# --mount type=bind,source="$(PWD)",target=/root/project \
+# --name ${PROJECT_NAME}-container \
+# -p 8080:8080 \
+# --entrypoint bash \
+# ${PROJECT_NAME}-image 
 
 # Enter running container
 # winpty docker exec -it ${PROJECT_NAME}-container bash
 
+# Linux
+docker run --rm -it \
+    --env-file .env \
+    --mount type=bind,source="$(pwd)",target=/root/project \
+    --name ${PROJECT_NAME}-container \
+    -p 8080:8080 \
+    --entrypoint bash \
+    ${PROJECT_NAME}-image 
