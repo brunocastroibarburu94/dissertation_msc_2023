@@ -6,3 +6,5 @@ site/
 .env
 .temp/*
 .zipline/*
+
+*.xlsx#

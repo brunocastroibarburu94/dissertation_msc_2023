@@ -12,8 +12,12 @@ dev-sync:
 pip-sync:
 	pip-sync requirements.txt
 
-jul:
+J:
 	julia --project=./julia
 
 jupyterlab:
 	jupyter lab  --port=8080 --no-browser --ip=0.0.0.0 --allow-root
+
+Jsync:
+	cp -fr /root/project/julia/Project.toml  /root/.julia/environments/v1.8/Project.toml 
+	cp -fr /root/project/julia/Manifest.toml  /root/.julia/environments/v1.8/Manifest.toml 

@@ -41,8 +41,8 @@ RUN pip install pip-tools
 COPY ./python/requirements.txt /tmp/requirements.txt
 
 RUN pip install -r /tmp/requirements.txt
-
-
+RUN jupyter contrib nbextension install 
+RUN jupyter nbextension enable varInspector/main
 # ========== Install Julia Extras ==========
 # Get Packages requirements
 # Replace manifest and project tomls with the ones in project 
