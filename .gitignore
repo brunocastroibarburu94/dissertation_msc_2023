@@ -8,3 +8,9 @@ site/
 .zipline/*
 
 *.xlsx#
+.AirBorneCache/
+notebooks/.cache/
+.jupyter/lab/workspaces/
+.jupyter/migrated
+.jupyter/lab/user-settings/@jupyterlab/filebrowser-extension/browser.jupyterlab-settings
+notebooks/~$zipline_demo_strategy.xlsx

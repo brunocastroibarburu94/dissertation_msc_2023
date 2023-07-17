@@ -2,8 +2,8 @@ module DeePC
 
 export SolveDeePC
 
-using JuMP
-using Ipopt
+using JuMP: Model, @variable, @objective, @constraint, optimize!
+using Ipopt: Ipopt
 using MathOptInterface
 
 function SolveDeePC(Up,Uf,Yp,Yf,Q,R,y_ini,u_ini)
