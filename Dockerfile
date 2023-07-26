@@ -42,6 +42,9 @@ COPY ./python/requirements.txt /tmp/requirements.txt
 
 RUN pip install -r /tmp/requirements.txt
 # RUN jupyter contrib nbextension install 
+# RUN python3 -m pip install --upgrade webio_jupyter_extensionv
+# RUN apt-get install -y nodejs npm 
+
 RUN jupyter nbextension enable varInspector/main
 # ========== Install Julia Extras ==========
 # Get Packages requirements

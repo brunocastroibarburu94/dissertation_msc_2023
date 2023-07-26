@@ -6,6 +6,19 @@ using JuMP: Model, @variable, @objective, @constraint, optimize!
 using Ipopt: Ipopt
 using MathOptInterface
 
+"""
+This is a modification of DeePC to predict trajectories 
+Using past trajectories and the current trajectory so far (y_ini)
+"""
+function matchTrajectory(Y,y_ini)
+    Yp = Y[1:length(y_ini),:] # Past-matching segments
+    Yf = Y[length(y_ini)+1:end,:] # Future-matching segments
+    g = Yp\y_ini # Least Square
+    y_fut = Yf*g
+    return y_fut
+end
+    
+
 function SolveDeePC(Up,Uf,Yp,Yf,Q,R,y_ini,u_ini)
     model = Model(Ipopt.Optimizer)
     set_silent(model)
