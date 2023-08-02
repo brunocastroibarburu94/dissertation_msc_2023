@@ -16,7 +16,7 @@ J:
 	julia --project=./julia
 
 jupyterlab:
-	jupyter lab  --port=8081 --no-browser --ip=0.0.0.0 --allow-root
+	jupyter lab  --port=8081 --ip=0.0.0.0 --allow-root 
 
 Jsync:
 	cp -fr /root/project/julia/Project.toml  /root/.julia/environments/v1.8/Project.toml 
