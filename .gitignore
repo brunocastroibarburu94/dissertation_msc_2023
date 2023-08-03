@@ -16,3 +16,4 @@ notebooks/.cache/
 notebooks/~$zipline_demo_strategy.xlsx
 notebooks/WIKI_PRICES_212b326a081eacca455e13140d7bb9db.zip
 node_modules/
+~$**
