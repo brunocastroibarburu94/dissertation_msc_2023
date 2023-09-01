@@ -1,5 +1,5 @@
 ### Experiment 1: Behavioural 60 days
-```
+```julia
 [ Info: Functions set: Behavioural
 [ Info: [ 2]  : 0.00906723112551376,  0.0783953848461613
 [ Info: [ 5]  : 0.01632464794896272,  0.11358495443839277
@@ -13,8 +13,9 @@
 [ Info: [ 45] : 0.04871072015083477,  0.07973069908465488
 [ Info: [ 50] : 0.021440005325453138, 0.040678853665730035
 ```
+
 ### Experiment 2: LV Tuning
-```
+```julia
 [ Info: [0.8, 60.0, 53.0]:97865.49427331556
 [ Info: [1.0, 53.0, 55.0]:115741.3988222547
 [ Info: [0.8, 59.0, 57.0]:110712.92130264739
@@ -109,4 +110,108 @@ Search Time                 1.070000000000001e-5
 Poll Time                   0.0120256
 Blackbox Evaluation Time    832.8957915000053
 
- ```
+```
+ 
+ # Unused functions and snippets
+
+#### JDL2
+The files produced are in the order of 1 and 2 Gb per context.
+```julia
+using JLD2: save
+save("example.jld2", Dict("sma_context"=>sma_context))
+```
+
+#### ordersForPortfolioRedistribution2
+```julia
+ 
+"""
+    ordersForPortfolioRedistribution(
+        sourcePortfolio::Dict{String, Float64}, 
+        targetDistribution::Dict{String, Float64},
+        assetPricing::Dict{String, Float64};
+        curency_symbol::String= "FEX/USD", 
+        account::Any=nothing,
+        costPropFactor::Real=0,
+        costPerTransactionFactor::Real=0,
+        )
+    This function generates the orders to obtain a particular value distribution on a given portfolio and static pricing.
+    It can consider proportional costs by scaling the orders amount by a factor and a fixed cost for each transacted asset.
+    It returns the portfolio with the desired distribution and the maximum amount of value expressed in a particular currency.
+
+    -`sourcePortfolio::Dict{String, Float64}`: Dictionary with assets and how many units of them are present in a portfolio 
+    -`targetDistribution::Dict{String, Float64}`: Desired distribution of the total value of the portfolio across the whole shares. The values do not need to add to 1, linear scaling will be used.
+    -`assetPricing::Dict{String, Float64}`: Value of each share of an asset, with a corresponding value expressed in terms of a currency.
+    -`curency_symbol::String= "FEX/USD"`: Symbol used to represent the currency in which the transactions are goint to take place. By default dollars, it should have value 1 on the assetPricing dictionary.
+    -`account::Any=nothing`: Argument to be passed to the account field in the orders.
+    -`costPropFactor::Real=0`:  Fee rate applied to the sell or purchase of any asset proportional to the value of the transaction.
+    -`costPerTransactionFactor::Real=0`: Fee per transaction, every time an asset is sold/bought this fill will apply.
+"""
+function ordersForPortfolioRedistribution2(
+    sourcePortfolio,targetDistribution,assetPricing;
+    curency_symbol="FEX/USD",account::Any=nothing,costPropFactor::Real=0,
+    costPerTransactionFactor::Real=0,min_shares_threshold::Real=10^-5)
+    # Generate Source Distribution from Portfolio
+    totalValue = sum([sourcePortfolio[x] * assetPricing[x] for x in keys(sourcePortfolio)])
+    sourceDst = Dict([
+        x => sourcePortfolio[x] * assetPricing[x] / totalValue for
+        x in keys(sourcePortfolio)
+    ])
+
+    assetSort = [x for x in keys(sourceDst)]
+    N = length(assetSort)
+    curency_pos = findall(x -> x == curency_symbol, assetSort)[1]
+    ShareVals = [assetPricing[x] for x in assetSort]
+    propShareVal = ShareVals ./ totalValue # Share Price expressed in terms of portfolio units.
+
+    # Problem Vectorization: D1 + P*d - Fees -> D2*k
+    D1 = [get(sourceDst, x, 0) for x in assetSort] # Source
+    D2 = [get(targetDistribution, x, 0) for x in assetSort] # Objective
+    M = zeros(N, N)
+    M[curency_pos, :] = propShareVal .* -1 # Price to pay per share (without fees)
+    P = spdiagm(0 => propShareVal) + M
+    FDollars = SparseVector(N, [curency_pos], [1]) # Dollar Fees Vector
+
+    #####
+    ##### Optimization Problem
+    #####
+    genOrderModel = Model(Ipopt.Optimizer)
+    set_silent(genOrderModel)
+    @variable(genOrderModel, 0 <= k) # Proportionality factor (shrinkage of portfolio)
+    @variable(genOrderModel, d[1:N])  # Amount to buy/sell of each asset
+    @variable(genOrderModel, propFees >= 0) # Amount Proportional Fees
+    @constraint(
+        genOrderModel,
+        [propFees; (propShareVal .* d) .* costPropFactor] in MOI.NormOneCone(1 + N)
+    ) # Implementation of norm-1 for Fees
+    @variable(genOrderModel, perTransactionFixFees >= 0) # Number of transactions fees
+    @constraint(
+        genOrderModel, perTransactionFixFees == sum(-δ.(d) .+ 1) * costPerTransactionFactor
+    ) # Implementation of norm-1 for Fees
+    @constraint(genOrderModel, d[curency_pos] == 0) # Do not buy or sell dollars (this is the currency).
+    # @info "Order Gen" curency_pos
+    
+    @constraint(
+        genOrderModel,
+        D1 .+ (P * d) .- (FDollars .* (propFees + perTransactionFixFees)) .== D2 .* k
+    ) # Distribution ratio
+    @objective(genOrderModel, Max, k) # With variance minimization
+    optimize!(genOrderModel)
+    d = value.(d)
+
+    #### 
+    #### Parsing & Order Generation
+    ####
+    amount = Dict([
+        assetSort[x] => d[x] for
+        x in 1:N if (x != curency_pos) && (abs(d[x]) > min_shares_threshold)
+    ])
+    orders = [genOrder(x, amount[x]; account=account) for x in keys(amount)]
+    return orders
+end
+
+
+
+```
+
+# AMC 
+https://www.fool.com/investing/2021/06/06/why-amc-entertainment-skyrocketed-1604-in-may/#:~:text=The%20stock%20rallied%20about%2020,sold%20short%20heading%20into%20May.
