@@ -10,9 +10,9 @@ PROJECT_NAME=msc-2023
 # docker rm ${PROJECT_NAME}-container 
 
 # Start container
-winpty docker run --rm -it \
+docker run --rm -it \
 --env-file .env \
---mount type=bind,source="$(PWD)",target=/root/project \
+--mount type=bind,source=$PWD,target=/root/project \
 --name ${PROJECT_NAME}-container \
 -p 8081:8081 \
 --entrypoint bash \

@@ -208,10 +208,18 @@ function ordersForPortfolioRedistribution2(
     orders = [genOrder(x, amount[x]; account=account) for x in keys(amount)]
     return orders
 end
+```
 
+#### HMM manual test
+```julia
+@info size(sr) size(returnHistoryWarmUp)
+nHiddenStates=2
 
-
+obs_seq = matrix2seq(float.(Matrix(returnHistoryStartData_Validation[:,traded_assets])))
+hmm_init=random_gaussian_hmm(nHiddenStates,length(obs_seq[1]))
+hmm_est, logL_evolution = baum_welch(hmm_init, obs_seq; rtol=-Inf, check_loglikelihood_increasing=false)
 ```
 
 # AMC 
 https://www.fool.com/investing/2021/06/06/why-amc-entertainment-skyrocketed-1604-in-may/#:~:text=The%20stock%20rallied%20about%2020,sold%20short%20heading%20into%20May.
+
